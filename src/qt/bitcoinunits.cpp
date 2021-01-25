@@ -42,7 +42,7 @@ QString BitcoinUnits::name(int unit)
     {
     case BTC: return QString("edit_abbreviation");
     case mBTC: return QString("edit_unit");
-    case uBTC: return QString("2edit_unit2");
+    case uBTC: return QString("edit_xunit");
     default: return QString("???");
     }
 }
@@ -53,7 +53,7 @@ QString BitcoinUnits::description(int unit)
     {
     case BTC: return QString("edit_abbreviation");
     case mBTC: return QString("edit_unit (1 / 1" THIN_SP_UTF8 "000)");
-    case uBTC: return QString("2edit_unit2 (1 / 1" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
+    case uBTC: return QString("edit_xunit (1 / 1" THIN_SP_UTF8 "000" THIN_SP_UTF8 "000)");
     default: return QString("???");
     }
 }
