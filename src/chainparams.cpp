@@ -48,8 +48,8 @@ static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesi
  */
 static CBlock CreateGenesisBlock(uint32_t nTime, uint32_t nNonce, uint32_t nBits, int32_t nVersion, const CAmount& genesisReward)
 {
-    const char* pszTimestamp = "1024 The Times 3/1/2021 Bitcoin 34k+ high price.";
-    const CScript genesisOutputScript = CScript() << ParseHex("edithere!") << OP_CHECKSIG;
+    const char* pszTimestamp = "1024 The Times 3/1/2021 Bitcoin 34k+ high price."; // แก้ไข 1
+    const CScript genesisOutputScript = CScript() << ParseHex("edithere!") << OP_CHECKSIG; // แก้ไข 2 
     return CreateGenesisBlock(pszTimestamp, genesisOutputScript, nTime, nNonce, nBits, nVersion, genesisReward);
 }
 
@@ -74,14 +74,14 @@ class CMainParams : public CChainParams {
 public:
     CMainParams() {
         strNetworkID = "main";
-        consensus.nSubsidyHalvingInterval = 210000; // Halving ทุก ๆ กี่บล็อก
+        consensus.nSubsidyHalvingInterval = 210000; // แก้ไข 3 - Halving ทุก ๆ กี่บล็อก 
         consensus.BIP34Height = 0;
-        consensus.BIP34Hash = uint256S("edithere");
+        consensus.BIP34Hash = uint256S("edithere"); // แก้ไข 4
         consensus.BIP65Height = 0; // 
         consensus.BIP66Height = 0; // 
         consensus.powLimit = uint256S("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // ความยากสูงสุด
-        consensus.nPowTargetTimespan = 3 * 24 * 60 * 60; // กี่วันจะทำการปรับค่าความยากใหม่
-        consensus.nPowTargetSpacing = 1 * 60; // ความเร็วธุรกรรม
+        consensus.nPowTargetTimespan = 2 * 60; // แก้ไข 5 - กี่นาทีจะทำการปรับค่าความยากใหม่  2*60 = 2 นาที
+        consensus.nPowTargetSpacing = 1 * 60; // แก้ไข 6 - ความเร็วธุรกรรม หรือ ความเร็วที่จะเกิด block ใหม่
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.fPowNoRetargeting = false;
         consensus.nRuleChangeActivationThreshold = 6000; // 75% of 8000 เปลี่ยนกฎใหม่เมื่อมีการยอมรับบล็อกมากกว่า 6000 ปกติ bitcoin 51% โดยวัดจากช่วงการกำหนดเป้าหมาย
@@ -104,38 +104,39 @@ public:
         consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000000000000000000001");
 
         // signatures block ของฉัน
-        consensus.defaultAssumeValid = uint256S("0x"); // ปิดใช้งานการตรวจสอบ บล็อกที่เป็น signature ของเรา
+        consensus.defaultAssumeValid = uint256S("0x"); // แก้ไข 7 - ปิดใช้งานการตรวจสอบ บล็อกที่เป็น signature ของเรา
 
         /**
          * The message start string is designed to be unlikely to occur in normal data.
          * The characters are rarely used upper ASCII, not valid as UTF-8, and produce
          * a large 32-bit integer with any alignment.
          */
+		//แก้ไข 8 - ให้ตั้งเป็นอะไรก็ได้ 00-ff ข้างหลัง 0x เป็นเอกลักษณ์ของเราเอง โดยของผมจะใส่เป็น 1 0 2 4 ซึ่งก็คือ 31 30 32 34
         pchMessageStart[0] = 0x31; //1
         pchMessageStart[1] = 0x30; //0
         pchMessageStart[2] = 0x32; //2
         pchMessageStart[3] = 0x34; //4
-        nDefaultPort = 5599; // port 
+        nDefaultPort = 5599; // แก้ไข 8 - port  
         nPruneAfterHeight = 100000; // ปิดใช้งานการแก้ไขบล็อกที่ต่ำกว่า 100000 เพราะส่วนใหญ่เริ่มต้นด้วยบล็อกว่างเปล่า 
 
 		//สูตรสร้าง genesis hash เวลาunixtime nNonce bits version coin
-        genesis = CreateGenesisBlock(1610516067, 1024001024, 0x1e0ffff0, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1610516067, 1024001024, 0x1e0ffff0, 1, 50 * COIN); // แก้ไข 9
         consensus.hashGenesisBlock = genesis.GetHash();
         assert(consensus.hashGenesisBlock == uint256S("0x"));
         assert(genesis.hashMerkleRoot == uint256S("0x"));
 
-        // Node สำรองที่เชื่อถือได้  ใส่ ip หรือ โดเมนที่ชี้ไปยังเซิร์ฟเวอร์ Node
-        vSeeds.emplace_back("node1.hi.in.th", true);
-		vSeeds.emplace_back("node2.hi.in.th", false);
+        // Node สำรองที่เชื่อถือได้  ใส่ ip หรือ โดเมนที่ชี้ไปยังเซิร์ฟเวอร์ Node  จะใส่เพิ่มกี่อันก็ได้
+        vSeeds.emplace_back("node1.hi.in.th", true); // แก้ไข 10
+		vSeeds.emplace_back("node2.hi.in.th", true); // แก้ไข 11
 
 		// เป็นการกำหนดตัวอักษรนำหน้ารหัสต่าง ๆ เช่น publickey privatekey
 		//https://en.bitcoin.it/wiki/List_of_address_prefixes
-        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,0);// 1
-        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,50);// M
-        base58Prefixes[SCRIPT_ADDRESS2] = std::vector<unsigned char>(1,51); // M
-        base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,8); // 4
-        base58Prefixes[EXT_PUBLIC_KEY] = {0x04, 0x88, 0xB2, 0x1E}; //HEX ตัวอักษร
-        base58Prefixes[EXT_SECRET_KEY] = {0x04, 0x88, 0xAD, 0xE4}; //HEX ตัวอักษร
+        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,0);// 1  แก้ไข 12
+        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,50);// M แก้ไข 13
+        base58Prefixes[SCRIPT_ADDRESS2] = std::vector<unsigned char>(1,51); // M แก้ไข 14
+        base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,8); // 4 แก้ไข 15
+        base58Prefixes[EXT_PUBLIC_KEY] = {0x31, 0x30, 0x32, 0x34}; //HEX ตัวอักษร 4 ตัว **แก้ หรือ ไม่ต้องแก้ก็ได้
+        base58Prefixes[EXT_SECRET_KEY] = {0x34, 0x32, 0x30, 0x31; //HEX ตัวอักษร 4 ตัว  **แก้ หรือ ไม่ต้องแก้ก็ได้
 
         vFixedSeeds = std::vector<SeedSpec6>(pnSeed6_main, pnSeed6_main + ARRAYLEN(pnSeed6_main));
 
@@ -145,13 +146,13 @@ public:
 
         checkpointData = (CCheckpointData) {
             {
-                {  0, uint256S("0x")},
+                {  0, uint256S("0x")}, // แก้ไข 16
             }
         };
 
         chainTxData = ChainTxData{
-			// getchaintxstats พิมพ์ใน console จะได้ข้อมูลมาใส่ ตรงนี้เอาไว้ใส่ทีหลังได้ เป็นบันทึกเช็คพ้อย
-            1610516067, // * UNIX timestamp of last known number of transactions
+			// getchaintxstats พิมพ์ใน console จะได้ข้อมูลมาใส่ ตรงนี้เอาไว้ใส่ทีหลังได้ เป็นบันทึกเช็คพ้อย ค่อยใส่ทีหลังได้เวลาอัพเดต QT
+            1610516067, // * UNIX timestamp แก้ไข 17
             0,  // * total number of transactions between genesis and that timestamp
                     //   (the tx=... number in the SetBestChain debug.log lines)
             0.0     // * estimated number of transactions per second after that timestamp
@@ -168,12 +169,12 @@ public:
         strNetworkID = "test";
         consensus.nSubsidyHalvingInterval = 210000;
         consensus.BIP34Height = 0;
-        consensus.BIP34Hash = uint256S(""); //hash
-        consensus.BIP65Height = 0; // 8075c771ed8b495ffd943980a95f702ab34fce3c8c54e379548bda33cc8c0573
-        consensus.BIP66Height = 0; // 8075c771ed8b495ffd943980a95f702ab34fce3c8c54e379548bda33cc8c0573
+        consensus.BIP34Hash = uint256S(""); //แก้ไข 18 ใส่ hash ของ block 0
+        consensus.BIP65Height = 0; 
+        consensus.BIP66Height = 0; 
         consensus.powLimit = uint256S("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
-        consensus.nPowTargetTimespan = 3 * 24 * 60 * 60; // 3 days
-        consensus.nPowTargetSpacing = 1 * 60;
+        consensus.nPowTargetTimespan = 2 * 60; // แก้ไข 19
+        consensus.nPowTargetSpacing = 1 * 60; // แก้ไข 20
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = false;
         consensus.nRuleChangeActivationThreshold = 1500; // 75% for testchains
@@ -196,31 +197,33 @@ public:
         consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000000000000000000001");
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0x"); //
+        consensus.defaultAssumeValid = uint256S("0x"); //แก้ไข 21 - ใส่ blockhash 0
+
 
         pchMessageStart[0] = 0x31; //1
         pchMessageStart[1] = 0x30; //0
         pchMessageStart[2] = 0x32; //2
         pchMessageStart[3] = 0x34; //4
-        nDefaultPort = 9955;
+        nDefaultPort = 9955; //แก้ไข 22
         nPruneAfterHeight = 1000;
 
-        genesis = CreateGenesisBlock(1610516067, 111111, 0x1e0ffff0, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1610516067, 111111, 0x1e0ffff0, 1, 50 * COIN); //แก้ไข 23
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x"));
-        assert(genesis.hashMerkleRoot == uint256S("0x"));
+        assert(consensus.hashGenesisBlock == uint256S("0x")); //แก้ไข 24
+        assert(genesis.hashMerkleRoot == uint256S("0x")); // แก้ไข 25
 
         vFixedSeeds.clear();
         vSeeds.clear();
         // nodes with support for servicebits filtering should be at the top
-        vSeeds.emplace_back("testnet.hi.in.th", true);
+        vSeeds.emplace_back("testnet.hi.in.th", true); // แก้ไข 26
 
-        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,50); //M
-        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,0); // 1
-        base58Prefixes[SCRIPT_ADDRESS2] = std::vector<unsigned char>(1,0); // 1
-        base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,45); //K
-        base58Prefixes[EXT_PUBLIC_KEY] = {0x04, 0x35, 0x87, 0xCF};
-        base58Prefixes[EXT_SECRET_KEY] = {0x04, 0x35, 0x83, 0x94};
+		// แนะนำว่าให้ไม่เหมือนกับ Mainnet ป้องกันความสับสน
+        base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,50); //M แก้ไข 27
+        base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,0); // 1 แก้ไข 28
+        base58Prefixes[SCRIPT_ADDRESS2] = std::vector<unsigned char>(1,0); // 1 แก้ไข 29
+        base58Prefixes[SECRET_KEY] =     std::vector<unsigned char>(1,45); //K แก้ไข 30
+        base58Prefixes[EXT_PUBLIC_KEY] = {0x04, 0x35, 0x87, 0xCF}; //**แก้ หรือ ไม่ต้องแก้ก็ได้
+        base58Prefixes[EXT_SECRET_KEY] = {0x04, 0x35, 0x83, 0x94};//**แก้ หรือ ไม่ต้องแก้ก็ได้
 
         vFixedSeeds = std::vector<SeedSpec6>(pnSeed6_test, pnSeed6_test + ARRAYLEN(pnSeed6_test));
 
@@ -230,13 +233,13 @@ public:
 
         checkpointData = (CCheckpointData) {
             {
-                {0, uint256S("0x")},
+                {0, uint256S("0x")}, //แก้ไข 31
             }
         };
 
         chainTxData = ChainTxData{
-            // Data as of block a0afbded94d4be233e191525dc2d467af5c7eab3143c852c3cd549831022aad6 (height 343833)
-            1610516067,
+            // Data as of block 
+            1610516067, // แก้ไข 32
             0,
             0.0
         };
@@ -257,8 +260,8 @@ public:
         consensus.BIP65Height = 1351; // BIP65 activated on regtest (Used in rpc activation tests)
         consensus.BIP66Height = 1251; // BIP66 activated on regtest (Used in rpc activation tests)
         consensus.powLimit = uint256S("7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
-        consensus.nPowTargetTimespan = 3 * 24 * 60 * 60; // two weeks
-        consensus.nPowTargetSpacing = 1 * 60;
+        consensus.nPowTargetTimespan = 5 * 60; // แก้ไข 33
+        consensus.nPowTargetSpacing = 1 * 60; // แก้ไข 34
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = true;
         consensus.nRuleChangeActivationThreshold = 108; // 75% for testchains
@@ -274,22 +277,22 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_SEGWIT].nTimeout = 999999999999ULL;
 
         // The best chain should have at least this much work.
-        consensus.nMinimumChainWork = uint256S("0x00");
+        consensus.nMinimumChainWork = uint256S("0x00"); //แก้ไข 35
 
         // By default assume that the signatures in ancestors of this block are valid.
-        consensus.defaultAssumeValid = uint256S("0x00");
+        consensus.defaultAssumeValid = uint256S("0x00"); //แก้ไข 36
 
-        pchMessageStart[0] = 0xff;
+        pchMessageStart[0] = 0xff; 
         pchMessageStart[1] = 0xbb;
         pchMessageStart[2] = 0xbb;
         pchMessageStart[3] = 0xdd;
-        nDefaultPort = 9999;
+        nDefaultPort = 9999; //แก้ไข 37
         nPruneAfterHeight = 1000;
 
-        genesis = CreateGenesisBlock(1610516753, 0, 0x207fffff, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1610516753, 0, 0x207fffff, 1, 50 * COIN); //แก้ไข 38
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256S("0x"));
-        assert(genesis.hashMerkleRoot == uint256S("0x"));
+        assert(consensus.hashGenesisBlock == uint256S("0x")); //แก้ไข 39
+        assert(genesis.hashMerkleRoot == uint256S("0x")); //แก้ไข 40
 
         vFixedSeeds.clear(); //!< Regtest mode doesn't have any fixed seeds.
         vSeeds.clear();      //!< Regtest mode doesn't have any DNS seeds.
@@ -300,12 +303,12 @@ public:
 
         checkpointData = (CCheckpointData) {
             {
-                {0, uint256S("0x")},
+                {0, uint256S("0x")}, //แก้ไข 41
             }
         };
 
         chainTxData = ChainTxData{
-            0,
+            0, 
             0,
             0
         };
